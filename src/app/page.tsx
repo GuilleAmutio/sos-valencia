@@ -65,6 +65,8 @@ export default function Home() {
   const [sortOrder, setSortOrder] = useState('newest');
   const [commentText, setCommentText] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [titleError, setTitleError] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(false);
 
   useEffect(() => {
     // Fetch posts from the API when the component mounts
@@ -125,6 +127,21 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
+    // Reset errors
+    setTitleError(false);
+    setDescriptionError(false);
+
+    // Validación
+    if (!newPost.title.trim()) {
+      setTitleError(true);
+      return;
+    }
+
+    if (!newPost.description.trim()) {
+      setDescriptionError(true);
+      return;
+    }
+
     try {
       const res = await fetch('/api/posts', {
         method: 'POST',
@@ -228,25 +245,36 @@ export default function Home() {
         <div className="sticky top-0 z-20 pb-4 backdrop-blur-sm">
           <div className="max-w-4xl mx-auto px-4 pt-4">
             {/* Search Bar with enhanced shadow */}
-            <div className="relative mb-4">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar publicaciones..."
-                className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black shadow-sm hover:shadow-md transition-shadow"
-              />
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <div className="flex gap-4 mb-4">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar publicaciones..."
+                  className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black shadow-sm hover:shadow-md transition-shadow"
+                />
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className="px-4 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black shadow-sm hover:shadow-md transition-shadow"
               >
-                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+                <option value="newest">Más recientes primero</option>
+                <option value="oldest">Más antiguos primero</option>
+              </select>
             </div>
 
             {/* Pagination Controls with enhanced design */}
@@ -564,19 +592,45 @@ export default function Home() {
 
           {/* Form Content */}
           <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4">
-            <input
-              placeholder="Título"
-              value={newPost.title}
-              onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-              className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
-            />
-            <textarea
-              placeholder="Descripción"
-              value={newPost.description}
-              onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
-              className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
-              rows={3}
-            />
+            <div className="flex flex-col">
+              <input
+                placeholder="Título"
+                value={newPost.title}
+                onChange={(e) => {
+                  setTitleError(false);
+                  setNewPost({ ...newPost, title: e.target.value });
+                }}
+                className={`border-2 ${
+                  titleError ? 'border-red-500' : 'border-blue-200'
+                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500`}
+              />
+              {titleError && (
+                <span className="text-red-500 text-sm mt-1">
+                  El título no puede estar vacío
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <textarea
+                placeholder="Descripción"
+                value={newPost.description}
+                onChange={(e) => {
+                  setDescriptionError(false);
+                  setNewPost({ ...newPost, description: e.target.value });
+                }}
+                className={`border-2 ${
+                  descriptionError ? 'border-red-500' : 'border-blue-200'
+                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500`}
+                rows={3}
+              />
+              {descriptionError && (
+                <span className="text-red-500 text-sm mt-1">
+                  La descripción no puede estar vacía
+                </span>
+              )}
+            </div>
+
             <div className="flex items-center gap-3">
               <label className="flex-1">
                 <div className="bg-blue-600 text-white p-3 rounded-lg text-center cursor-pointer hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold">
