@@ -411,7 +411,12 @@ export default function Home() {
                   <h3 className="text-lg font-semibold text-red-800">Información adicional:</h3>
                   <ul className="list-disc list-inside ml-4 text-red-700">
                     <li>
-                      <a href="https://www.mediavida.com/foro/off-topic/temporal-en-el-sudeste-espanol-716124">
+                      <a 
+                        href="https://www.mediavida.com/foro/off-topic/temporal-en-el-sudeste-espanol-716124"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-red-700 hover:text-red-900 underline hover:no-underline transition-all"
+                      >
                         Primer mensaje del hilo en el foro Mediavida (voluntariado, donaciones, centros de acogida)
                       </a>
                     </li>
