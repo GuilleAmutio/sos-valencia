@@ -180,8 +180,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white w-full pb-[200px]">
-      <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
+    <main className="min-h-screen bg-white w-full">
+      <div className="max-w-4xl mx-auto px-4 bg-white pt-0 mt-0">
         <h1 className="text-4xl font-bold text-center py-6 text-blue-700 bg-white">SOS Valencia</h1>
         
         {/* Sticky container for search and pagination */}
@@ -368,7 +368,7 @@ export default function Home() {
         </div>
 
         {/* Existing Posts */}
-        <div className="space-y-6 mb-20">
+        <div className="space-y-6">
           {currentPosts.map((post) => {
             console.log('Rendering post:', post);
             
@@ -518,7 +518,7 @@ export default function Home() {
       </div>
 
       {/* Main container for create post form */}
-      <div className="fixed bottom-0 left-0 right-0">
+      <div className="pb-[200px]">
         {/* Form container with button - entire unit slides */}
         <div 
           className={`bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
