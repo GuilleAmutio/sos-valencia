@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sosvalencia.com/sitemap.xml 

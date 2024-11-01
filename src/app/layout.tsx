@@ -21,22 +21,30 @@ const ubuntu = Ubuntu({
 });
 
 export const metadata: Metadata = {
-  title: 'SOS Valencia',
-  description: 'Ayudémonos entre todos',
-  icons: {
-    icon: '/aid-svgrepo-com.svg',
-    apple: '/aid-svgrepo-com.svg',
-  },
+  title: 'SOS Valencia | Ayuda DANA Valencia 2023',
+  description: 'Plataforma de ayuda para afectados por la DANA e inundaciones en Valencia. Encuentra y ofrece ayuda, información sobre emergencias y recursos para damnificados.',
+  keywords: 'DANA Valencia, inundaciones Valencia, ayuda Valencia, emergencias Valencia, SOS Valencia, temporal Valencia, lluvia torrencial Valencia, damnificados Valencia, 2023',
   openGraph: {
-    title: 'SOS Valencia',
-    description: 'Ayudémonos entre todos',
+    title: 'SOS Valencia | Ayuda DANA Valencia 2023',
+    description: 'Plataforma de ayuda para afectados por la DANA e inundaciones en Valencia. Encuentra y ofrece ayuda, información sobre emergencias y recursos para damnificados.',
+    url: 'https://sosvalencia.com',
+    siteName: 'SOS Valencia',
     locale: 'es_ES',
     type: 'website',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'SOS Valencia',
-    description: 'Ayudémonos entre todos',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'TMs3KabLdmegjnnFi7n9pjehlIaOxRnQMDCOrbgX1Z4',
   },
 }
 

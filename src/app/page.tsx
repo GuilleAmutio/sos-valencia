@@ -742,6 +742,20 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "SOS Valencia",
+            "url": "https://sosvalencia.com",
+            "description": "Plataforma de ayuda para afectados por la DANA e inundaciones en Valencia",
+            "keywords": "DANA Valencia, inundaciones, ayuda, emergencias, temporal",
+          })
+        }}
+      />
     </main>
   );
 }
