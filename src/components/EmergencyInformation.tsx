@@ -56,13 +56,13 @@ export default function EmergencyInformation() {
                             <ul className="list-disc list-inside ml-4 text-red-700">
                                 <li>
                                     <a
-                                        href="https://www.mediavida.com/foro/off-topic/temporal-en-el-sudeste-espanol-716124"
+                                        href="https://www.mediavida.com/foro/off-topic/dana-informacion-para-ayuda-auxilio-716195"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-red-700 hover:text-red-900 underline hover:no-underline transition-all"
                                     >
-                                        Primer mensaje del hilo en el foro Mediavida (voluntariado, donaciones, centros
-                                        de acogida)
+                                        Hilo en el foro Mediavida con mucha información variada (voluntariado, donaciones, centros
+                                        de acogida...)
                                     </a>
                                 </li>
                             </ul>
