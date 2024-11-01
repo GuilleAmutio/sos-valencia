@@ -517,128 +517,133 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Collapsible Create Post Form */}
-      <div className={`fixed bottom-0 left-0 right-0 bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
-        isCreatePostOpen ? 'translate-y-0' : 'translate-y-[calc(100%-2.5rem)]'
-      }`}>
-        {/* Toggle Button */}
-        <button
-          onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
-          className="absolute -top-8 sm:-top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md text-sm sm:text-base sm:px-6 sm:py-2 z-10 border-t-2 border-l-2 border-r-2 border-blue-200"
+      {/* Main container for create post form */}
+      <div className="fixed bottom-0 left-0 right-0">
+        {/* Form container with button - entire unit slides */}
+        <div 
+          className={`bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
+            isCreatePostOpen ? 'translate-y-0' : 'translate-y-full'
+          }`}
         >
-          <span className="font-medium whitespace-nowrap">
-            {isCreatePostOpen ? 'Cerrar formulario' : 'Crear Nueva Publicación'}
-          </span>
-          <svg
-            className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${
-              isCreatePostOpen ? 'rotate-180' : ''
-            }`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          {/* Button - always at top of form */}
+          <button
+            onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
+            className="absolute left-1/2 transform -translate-x-1/2 -top-10 bg-blue-600 text-white px-6 py-2 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </button>
-
-        {/* Form Content */}
-        <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4 relative">
-          <input
-            placeholder="Título"
-            value={newPost.title}
-            onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-            className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
-          />
-          <textarea
-            placeholder="Descripción"
-            value={newPost.description}
-            onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
-            className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
-            rows={3}
-          />
-          <div className="flex items-center gap-3">
-            <label className="flex-1">
-              <div className="bg-blue-600 text-white p-3 rounded-lg text-center cursor-pointer hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {uploading ? 'Subiendo...' : 'Subir Imágenes'}
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                disabled={uploading}
-                ref={fileInputRef}
-                multiple // Enable multiple file selection
-              />
-            </label>
-            <button 
-              onClick={handleSubmit}
-              disabled={uploading}
-              className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 active:bg-green-800 transition-colors shadow-sm hover:shadow-md flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            <span className="font-medium whitespace-nowrap">
+              {isCreatePostOpen ? 'Cerrar formulario' : 'Crear Nueva Publicación'}
+            </span>
+            <svg
+              className={`w-5 h-5 transition-transform duration-200 ${
+                isCreatePostOpen ? 'rotate-180' : ''
+              }`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              Crear Post
-            </button>
-          </div>
-          
-          {/* Preview for multiple images */}
-          {newPost.imageUrls && newPost.imageUrls.length > 0 && (
-            <div className="mt-2 relative w-full">
-              {newPost.imageUrls.length === 1 ? (
-                <div className="relative">
-                  <img 
-                    src={newPost.imageUrls[0]} 
-                    alt="Preview" 
-                    className="w-full h-auto max-h-[200px] object-contain rounded-lg bg-gray-50"
-                  />
-                  <button
-                    onClick={() => setNewPost(prev => ({ ...prev, imageUrls: [] }))}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                  >
-                    ✕
-                  </button>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          {/* Form Content */}
+          <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4">
+            <input
+              placeholder="Título"
+              value={newPost.title}
+              onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+              className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
+            />
+            <textarea
+              placeholder="Descripción"
+              value={newPost.description}
+              onChange={(e) => setNewPost({ ...newPost, description: e.target.value })}
+              className="border-2 border-blue-200 p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500"
+              rows={3}
+            />
+            <div className="flex items-center gap-3">
+              <label className="flex-1">
+                <div className="bg-blue-600 text-white p-3 rounded-lg text-center cursor-pointer hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 font-semibold">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  {uploading ? 'Subiendo...' : 'Subir Imágenes'}
                 </div>
-              ) : (
-                <div className="relative">
-                  <div className="overflow-hidden" ref={emblaRef}>
-                    <div className="flex">
-                      {newPost.imageUrls.map((url, index) => (
-                        <div key={index} className="flex-[0_0_100%] min-w-0">
-                          <img 
-                            src={url} 
-                            alt={`Preview ${index + 1}`}
-                            className="w-full h-auto max-h-[200px] object-contain rounded-lg bg-gray-50"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex justify-center gap-2 mt-2">
-                      {newPost.imageUrls.map((_, index) => (
-                        <button
-                          key={index}
-                          className="w-2 h-2 rounded-full bg-blue-300"
-                          aria-label={`Go to slide ${index + 1}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setNewPost(prev => ({ ...prev, imageUrls: [] }))}
-                    className="absolute top-2 right-2 z-10 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  disabled={uploading}
+                  ref={fileInputRef}
+                  multiple // Enable multiple file selection
+                />
+              </label>
+              <button 
+                onClick={handleSubmit}
+                disabled={uploading}
+                className="bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 active:bg-green-800 transition-colors shadow-sm hover:shadow-md flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Crear Post
+              </button>
             </div>
-          )}
+            
+            {/* Preview for multiple images */}
+            {newPost.imageUrls && newPost.imageUrls.length > 0 && (
+              <div className="mt-2 relative w-full">
+                {newPost.imageUrls.length === 1 ? (
+                  <div className="relative">
+                    <img 
+                      src={newPost.imageUrls[0]} 
+                      alt="Preview" 
+                      className="w-full h-auto max-h-[200px] object-contain rounded-lg bg-gray-50"
+                    />
+                    <button
+                      onClick={() => setNewPost(prev => ({ ...prev, imageUrls: [] }))}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="overflow-hidden" ref={emblaRef}>
+                      <div className="flex">
+                        {newPost.imageUrls.map((url, index) => (
+                          <div key={index} className="flex-[0_0_100%] min-w-0">
+                            <img 
+                              src={url} 
+                              alt={`Preview ${index + 1}`}
+                              className="w-full h-auto max-h-[200px] object-contain rounded-lg bg-gray-50"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex justify-center gap-2 mt-2">
+                        {newPost.imageUrls.map((_, index) => (
+                          <button
+                            key={index}
+                            className="w-2 h-2 rounded-full bg-blue-300"
+                            aria-label={`Go to slide ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setNewPost(prev => ({ ...prev, imageUrls: [] }))}
+                      className="absolute top-2 right-2 z-10 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>
