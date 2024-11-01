@@ -8,7 +8,7 @@ interface ImageModalProps {
 }
 
 export default function EmergencyInformation() {
-    const [isEmergencyExpanded, setIsEmergencyExpanded] = useState(false);
+    const [isEmergencyExpanded, setIsEmergencyExpanded] = useState(true);
     return (
         <div className="bg-red-50 border-2 border-red-500 rounded-xl shadow-md mb-8 mt-4">
             <h2 className="text-2xl font-bold text-red-700 p-4">⚠️ Información de Emergencia</h2>
