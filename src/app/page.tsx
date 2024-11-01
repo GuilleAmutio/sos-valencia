@@ -1,7 +1,7 @@
 // src/app/page.tsx
 "use client"; // Add this line to make this a client component
 
-import { useState, useEffect, useRef, ChangeEvent } from 'react';
+import { useState, useEffect, useRef, ChangeEvent, Fragment } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback } from 'react';
 import Link from 'next/link';
@@ -58,6 +58,9 @@ export default function Home() {
   const [isEmergencyExpanded, setIsEmergencyExpanded] = useState(true);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPageOptions = [10, 25, 50, 100];
 
   useEffect(() => {
     // Fetch posts from the API when the component mounts
@@ -151,37 +154,136 @@ export default function Home() {
     );
   });
 
+  const indexOfLastPost = currentPage * itemsPerPage;
+  const indexOfFirstPost = indexOfLastPost - itemsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
         <h1 className="text-4xl font-bold text-center py-6 text-blue-700 bg-white">SOS Valencia</h1>
         
-        {/* Add Search Bar */}
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar publicaciones..."
-              className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
-            />
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+        {/* Sticky container for search and pagination */}
+        <div className="sticky top-0 bg-white z-20 pb-4 shadow-sm">
+          {/* Search Bar */}
+          <div className="mb-4">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar publicaciones..."
+                className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
+              />
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Pagination Controls */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow border-2 border-blue-200">
+            {/* Items per page selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-gray-600">Mostrar:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded-md px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {itemsPerPageOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <span className="text-gray-600">por página</span>
+            </div>
+
+            {/* Page numbers */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-3 py-1 rounded-md bg-blue-50 text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-100"
+              >
+                ←
+              </button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  return page === 1 || 
+                         page === totalPages || 
+                         Math.abs(page - currentPage) <= 1;
+                })
+                .map((page, index, array) => {
+                  if (index > 0 && page - array[index - 1] > 1) {
+                    return (
+                      <Fragment key={`ellipsis-${page}`}>
+                        <span className="px-2 text-gray-500">...</span>
+                        <button
+                          onClick={() => handlePageChange(page)}
+                          className={`px-3 py-1 rounded-md ${
+                            currentPage === page
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      </Fragment>
+                    );
+                  }
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-3 py-1 rounded-md ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 rounded-md bg-blue-50 text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-100"
+              >
+                →
+              </button>
+            </div>
+
+            {/* Posts count */}
+            <div className="text-gray-600">
+              Mostrando {indexOfFirstPost + 1}-{Math.min(indexOfLastPost, filteredPosts.length)} de {filteredPosts.length}
+            </div>
           </div>
         </div>
 
         {/* Emergency Information Card */}
-        <div className="bg-red-50 border-2 border-red-500 rounded-xl shadow-md mb-8">
+        <div className="bg-red-50 border-2 border-red-500 rounded-xl shadow-md mb-8 mt-4">
           <h2 className="text-2xl font-bold text-red-700 p-4">⚠️ Información de Emergencia</h2>
           
           <button 
@@ -241,7 +343,7 @@ export default function Home() {
 
         {/* Existing Posts */}
         <div className="space-y-6 mb-20">
-          {filteredPosts.map((post) => {
+          {currentPosts.map((post) => {
             console.log('Rendering post:', post);
             
             return (
