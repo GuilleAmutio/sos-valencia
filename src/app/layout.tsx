@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import localFont from "next/font/local";
 import "./globals.css";
 import { Ubuntu } from 'next/font/google';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -54,15 +55,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="icon"
-          href="/aid-svgrepo-com.svg"
-          type="image/svg+xml"
-        />
-      </head>
-      <body>{children}</body>
+    <html lang="es">
+      <body>
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
