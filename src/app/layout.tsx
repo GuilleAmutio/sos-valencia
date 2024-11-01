@@ -23,11 +23,11 @@ const ubuntu = Ubuntu({
 });
 
 export const metadata: Metadata = {
-  title: 'SOS Valencia | Ayuda DANA Valencia 2023',
+  title: 'SOS Valencia | Ayuda DANA Valencia 2024',
   description: 'Plataforma de ayuda para afectados por la DANA e inundaciones en Valencia. Encuentra y ofrece ayuda, información sobre emergencias y recursos para damnificados.',
-  keywords: 'DANA Valencia, inundaciones Valencia, ayuda Valencia, emergencias Valencia, SOS Valencia, temporal Valencia, lluvia torrencial Valencia, damnificados Valencia, 2023',
+  keywords: 'DANA Valencia, inundaciones Valencia, ayuda Valencia, emergencias Valencia, SOS Valencia, temporal Valencia, lluvia torrencial Valencia, damnificados Valencia, 2024',
   openGraph: {
-    title: 'SOS Valencia | Ayuda DANA Valencia 2023',
+    title: 'SOS Valencia | Ayuda DANA Valencia 2024',
     description: 'Plataforma de ayuda para afectados por la DANA e inundaciones en Valencia. Encuentra y ofrece ayuda, información sobre emergencias y recursos para damnificados.',
     url: 'https://sosvalencia.com',
     siteName: 'SOS Valencia',
