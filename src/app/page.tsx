@@ -56,6 +56,7 @@ export default function Home() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isEmergencyExpanded, setIsEmergencyExpanded] = useState(true);
+  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
 
   useEffect(() => {
     // Fetch posts from the API when the component mounts
@@ -142,7 +143,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white w-full pt-0 mt-0">
+    <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
         <h1 className="text-4xl font-bold text-center py-6 text-blue-700 bg-white">SOS Valencia</h1>
         
@@ -355,9 +356,37 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Create post form */}
-      <div className="fixed bottom-0 left-0 right-0 bg-gray-100 border-t-2 border-blue-200 p-4 shadow-lg w-full">
-        <div className="max-w-4xl mx-auto flex flex-col gap-3">
+      {/* Collapsible Create Post Form */}
+      <div className={`fixed bottom-0 left-0 right-0 bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
+        isCreatePostOpen ? 'translate-y-0' : 'translate-y-[calc(100%-3.5rem)]'
+      }`}>
+        {/* Toggle Button */}
+        <button
+          onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
+          className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-2 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
+        >
+          <span className="font-medium">
+            {isCreatePostOpen ? 'Cerrar formulario' : 'Crear Nueva Publicación'}
+          </span>
+          <svg
+            className={`w-5 h-5 transition-transform duration-200 ${
+              isCreatePostOpen ? 'rotate-180' : ''
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+
+        {/* Your existing form content */}
+        <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4">
           <input
             placeholder="Título"
             value={newPost.title}
