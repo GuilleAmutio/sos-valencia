@@ -211,6 +211,17 @@ export default function Home() {
             <span className="text-red-600">SOS</span>
             <span className="text-black ml-2">Valencia</span>
           </h1>
+          <p className="mt-2 text-gray-600">
+            Cualquier incidencia reportar en{' '}
+            <a 
+              href="https://github.com/GuilleAmutio/sos-valencia/issues" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              @github/issues
+            </a>
+          </p>
         </div>
         
         {/* Sticky container for search and pagination */}
