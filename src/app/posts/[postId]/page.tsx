@@ -18,37 +18,77 @@ interface Post {
 
 // Post content component with all the details
 const PostContent = ({ post }: { post: Post }) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    align: 'center',
+  });
 
   return (
-    <div className="bg-blue-50 border border-blue-100 p-6 rounded-xl shadow-md">
-      <h1 className="text-3xl font-bold text-blue-800 mb-4">{post.title}</h1>
-      
+    <div className="bg-gray-100 border border-gray-200 p-6 rounded-xl shadow-md">
+      {/* Title */}
+      <h1 className="text-2xl font-bold text-gray-900 mb-4">{post.title}</h1>
+
       {/* Images Carousel */}
       {post.imageUrls && post.imageUrls.length > 0 && (
-        <div className="relative mt-4 w-full mb-6">
+        <div className="relative w-full mb-6">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {post.imageUrls.map((url, index) => (
-                <div key={index} className="flex-[0_0_100%] min-w-0">
+                <div key={index} className="relative flex-[0_0_100%]">
                   <img 
                     src={url} 
                     alt={`${post.title} - ${index + 1}`}
-                    className="w-full h-auto max-h-[400px] object-contain rounded-lg bg-gray-50"
+                    className="w-full h-[250px] object-contain bg-gray-100 rounded-lg"
                   />
                 </div>
               ))}
             </div>
           </div>
+          
+          {/* Navigation Buttons */}
+          {post.imageUrls.length > 1 && (
+            <>
+              <button
+                onClick={() => emblaApi?.scrollPrev()}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white transition-all"
+                aria-label="Previous image"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="w-6 h-6 text-gray-600" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => emblaApi?.scrollNext()}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white transition-all"
+                aria-label="Next image"
+              >
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="w-6 h-6 text-gray-600" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          )}
         </div>
       )}
 
       {/* Description */}
-      <p className="text-black whitespace-pre-wrap mb-8">{post.description}</p>
+      <p className="text-gray-700 whitespace-pre-wrap mb-6">{post.description}</p>
 
       {/* Comments Section */}
-      <div className="mt-8 border-t border-blue-100 pt-6">
-        <h2 className="text-2xl font-semibold text-blue-700 mb-6">
+      <div className="mt-8 border-t border-gray-200 pt-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">
           Comentarios ({post.comments.length})
         </h2>
 
@@ -69,11 +109,8 @@ const PostContent = ({ post }: { post: Post }) => {
               });
 
               if (res.ok) {
-                const updatedPost = await res.json();
-                // You'll need to implement setPost in the parent component
-                // setPost(updatedPost);
                 form.reset();
-                window.location.reload(); // Temporary solution to refresh comments
+                window.location.reload();
               }
             } catch (error) {
               console.error('Error posting comment:', error);
@@ -84,7 +121,7 @@ const PostContent = ({ post }: { post: Post }) => {
           <textarea
             name="comment"
             placeholder="Escribe un comentario..."
-            className="w-full p-4 rounded-lg border border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
+            className="w-full p-4 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
             rows={3}
             required
           />
@@ -99,8 +136,8 @@ const PostContent = ({ post }: { post: Post }) => {
         {/* Comments Display */}
         <div className="space-y-4">
           {post.comments.map((comment, index) => (
-            <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
-              <p className="text-black">{comment.text}</p>
+            <div key={index} className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-gray-700">{comment.text}</p>
               <span className="text-sm text-gray-500 mt-2 block">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>
