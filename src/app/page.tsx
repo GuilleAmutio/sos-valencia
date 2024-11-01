@@ -446,27 +446,72 @@ export default function Home() {
                 {post.description}
               </p>
 
-              {/* Comments section with enhanced styling */}
-              <div className="mt-6 pt-4 border-t border-blue-50">
-                <h3 className="text-lg font-medium text-blue-900 mb-3">Comentarios</h3>
-                {/* ... comments ... */}
-              </div>
+              {/* Comments section */}
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">
+                  Comentarios ({post.comments.length})
+                </h3>
+                
+                {/* Comment form */}
+                <div className="mt-4">
+                  <textarea
+                    placeholder="Escribe un comentario..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none text-black"
+                    rows={3}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!commentText.trim()) return;
+                      
+                      try {
+                        const res = await fetch(`/api/posts/${post._id}/comments`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ text: commentText }),
+                        });
 
-              {/* Comment form with enhanced styling */}
-              <div className="mt-4">
-                <textarea
-                  placeholder="Escribe un comentario..."
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  className="w-full p-3 border-2 border-blue-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none text-black"
-                  rows={3}
-                />
-                <button
-                  onClick={() => handleComment(post._id)}
-                  className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md"
-                >
-                  Comentar
-                </button>
+                        if (!res.ok) throw new Error('Failed to post comment');
+
+                        // Reset comment text
+                        setCommentText('');
+                        
+                        // Refresh posts to show new comment
+                        const refreshRes = await fetch('/api/posts');
+                        const refreshedPosts = await refreshRes.json();
+                        setPosts(refreshedPosts);
+                      } catch (error) {
+                        console.error('Error posting comment:', error);
+                      }
+                    }}
+                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md"
+                  >
+                    Comentar
+                  </button>
+                </div>
+
+                {/* Display last 2 comments */}
+                <div className="mt-4 space-y-3">
+                  {post.comments.slice(-2).map((comment, index) => (
+                    <div key={index} className="bg-gray-50 p-3 rounded-lg">
+                      <p className="text-gray-700">{comment.text}</p>
+                      <span className="text-sm text-gray-500 mt-1 block">
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
+                  
+                  {/* "Ver más" link if there are more than 2 comments */}
+                  {post.comments.length > 2 && (
+                    <Link 
+                      href={`/posts/${post._id}`}
+                      className="block mt-3 text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                      Ver todos los comentarios ({post.comments.length})
+                    </Link>
+                  )}
+                </div>
               </div>
             </div>
           ))}
