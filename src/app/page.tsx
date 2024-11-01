@@ -224,10 +224,19 @@ export default function Home() {
     <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
         <div className="text-center py-6">
-          <h1 className="text-4xl md:text-5xl font-black tracking-wider">
-            <span className="text-red-600">SOS</span>
-            <span className="text-black ml-2">Valencia</span>
-          </h1>
+          <div className="flex justify-center items-center">
+            <div className="flex items-center gap-2">
+              <img 
+                src="/aid-svgrepo-com.svg" 
+                alt="SOS Valencia Icon" 
+                className="w-8 md:w-10 h-8 md:h-10"
+              />
+              <h1 className="text-4xl md:text-5xl font-black tracking-wider">
+                <span className="text-red-600">SOS</span>
+                <span className="text-black ml-2">Valencia</span>
+              </h1>
+            </div>
+          </div>
           <p className="mt-2 text-gray-600">
             Cualquier incidencia reportar en{' '}
             <a 

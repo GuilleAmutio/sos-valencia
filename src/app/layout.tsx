@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     locale: 'es_ES',
     type: 'website',
   },
+  icons: {
+    icon: '/aid-svgrepo-com.svg',
+  },
   robots: {
     index: true,
     follow: true,
