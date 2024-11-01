@@ -57,6 +57,7 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isEmergencyExpanded, setIsEmergencyExpanded] = useState(true);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Fetch posts from the API when the component mounts
@@ -142,11 +143,43 @@ export default function Home() {
     }
   };
 
+  const filteredPosts = posts.filter(post => {
+    const query = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.description.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
         <h1 className="text-4xl font-bold text-center py-6 text-blue-700 bg-white">SOS Valencia</h1>
         
+        {/* Add Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar publicaciones..."
+              className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
+            />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
         {/* Emergency Information Card */}
         <div className="bg-red-50 border-2 border-red-500 rounded-xl shadow-md mb-8">
           <h2 className="text-2xl font-bold text-red-700 p-4">⚠️ Información de Emergencia</h2>
@@ -208,7 +241,7 @@ export default function Home() {
 
         {/* Existing Posts */}
         <div className="space-y-6 mb-20">
-          {posts.map((post) => {
+          {filteredPosts.map((post) => {
             console.log('Rendering post:', post);
             
             return (
