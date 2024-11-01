@@ -408,6 +408,14 @@ export default function Home() {
                     <li>Emergencias: 112</li>
                     <li>Personas desaparecidas: 900 365 112</li>
                   </ul>
+                  <h3 className="text-lg font-semibold text-red-800">Información adicional:</h3>
+                  <ul className="list-disc list-inside ml-4 text-red-700">
+                    <li>
+                      <a href="https://www.mediavida.com/foro/off-topic/temporal-en-el-sudeste-espanol-716124">
+                        Primer mensaje del hilo en el foro Mediavida (voluntariado, donaciones, centros de acogida)
+                      </a>
+                    </li>
+                  </ul>
                 </div>
 
 
