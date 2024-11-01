@@ -1,7 +1,7 @@
 // src/app/api/posts/route.ts
 import { NextResponse } from 'next/server';
 import { dbConnect } from '../../../lib/mongodb'; // Fixed import name
-import Post, { IPost } from '@/models/Post';
+import Post from '@/models/Post';
 
 export async function GET() {
   await dbConnect();
