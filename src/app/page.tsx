@@ -63,7 +63,7 @@ export default function Home() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const itemsPerPageOptions = [10, 25, 50, 100];
   const [sortOrder, setSortOrder] = useState('newest');
-  const [commentText, setCommentText] = useState('');
+  const [commentTexts, setCommentTexts] = useState<{ [key: string]: string }>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [titleError, setTitleError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
@@ -200,6 +200,9 @@ export default function Home() {
 
   const handleComment = async (postId: string) => {
     try {
+      const commentText = commentTexts[postId];
+      if (!commentText?.trim()) return;
+
       const res = await fetch(`/api/posts/${postId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -208,8 +211,11 @@ export default function Home() {
 
       if (!res.ok) throw new Error('Failed to post comment');
 
-      // Reset comment text
-      setCommentText('');
+      // Reset solo el comentario de este post específico
+      setCommentTexts(prev => ({
+        ...prev,
+        [postId]: ''
+      }));
       
       // Refresh posts to show new comment
       const refreshRes = await fetch('/api/posts');
@@ -517,26 +523,32 @@ export default function Home() {
                 <div className="mt-4">
                   <textarea
                     placeholder="Escribe un comentario..."
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
+                    value={commentTexts[post._id] || ''}
+                    onChange={(e) => setCommentTexts(prev => ({
+                      ...prev,
+                      [post._id]: e.target.value
+                    }))}
                     className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none text-black"
                     rows={3}
                   />
                   <button
                     onClick={async () => {
-                      if (!commentText.trim()) return;
+                      if (!commentTexts[post._id]?.trim()) return;
                       
                       try {
                         const res = await fetch(`/api/posts/${post._id}/comments`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ text: commentText }),
+                          body: JSON.stringify({ text: commentTexts[post._id] }),
                         });
 
                         if (!res.ok) throw new Error('Failed to post comment');
 
-                        // Reset comment text
-                        setCommentText('');
+                        // Reset solo el comentario de este post específico
+                        setCommentTexts(prev => ({
+                          ...prev,
+                          [post._id]: ''
+                        }));
                         
                         // Refresh posts to show new comment
                         const refreshRes = await fetch('/api/posts');
