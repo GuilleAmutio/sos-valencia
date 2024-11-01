@@ -15,17 +15,17 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'SOS Valencia',
-  description: 'Ayudemonos entre nosotros',
+  description: 'Ayudemonos entre todos',
   openGraph: {
     title: 'SOS Valencia',
-    description: 'Ayudemonos entre nosotros',
+    description: 'Ayudemonos entre todos',
     locale: 'es_ES',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SOS Valencia',
-    description: 'Ayudemonos entre nosotros',
+    description: 'Ayudemonos entre todos',
   },
 }
 
