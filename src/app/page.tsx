@@ -391,18 +391,18 @@ export default function Home() {
 
       {/* Collapsible Create Post Form */}
       <div className={`fixed bottom-0 left-0 right-0 bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
-        isCreatePostOpen ? 'translate-y-0' : 'translate-y-[calc(100%-3.5rem)]'
+        isCreatePostOpen ? 'translate-y-0' : 'translate-y-[calc(100%-2.5rem)]'
       }`}>
         {/* Toggle Button */}
         <button
           onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
-          className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-2 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
+          className="absolute -top-8 sm:-top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-1.5 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md text-sm sm:text-base sm:px-6 sm:py-2 z-10 border-t-2 border-l-2 border-r-2 border-blue-200"
         >
-          <span className="font-medium">
+          <span className="font-medium whitespace-nowrap">
             {isCreatePostOpen ? 'Cerrar formulario' : 'Crear Nueva Publicación'}
           </span>
           <svg
-            className={`w-5 h-5 transition-transform duration-200 ${
+            className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${
               isCreatePostOpen ? 'rotate-180' : ''
             }`}
             fill="none"
@@ -418,8 +418,8 @@ export default function Home() {
           </svg>
         </button>
 
-        {/* Your existing form content */}
-        <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4">
+        {/* Form Content */}
+        <div className="max-w-4xl mx-auto flex flex-col gap-3 p-4 relative">
           <input
             placeholder="Título"
             value={newPost.title}
