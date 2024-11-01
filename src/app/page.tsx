@@ -405,8 +405,38 @@ export default function Home() {
 
               {/* Image carousel with enhanced shadows */}
               {post.imageUrls && post.imageUrls.length > 0 && (
-                <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden shadow-md">
-                  {/* ... carousel content ... */}
+                <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-md">
+                  <div className="embla" ref={emblaRef}>
+                    <div className="embla__container flex">
+                      {post.imageUrls.map((url, index) => (
+                        <div key={index} className="embla__slide flex-[0_0_100%] min-w-0">
+                          <img 
+                            src={url} 
+                            alt={`Image ${index + 1}`}
+                            className="w-full h-[250px] object-contain bg-gray-100"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Navigation Buttons */}
+                  {post.imageUrls.length > 1 && (
+                    <>
+                      <button
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white"
+                        onClick={() => emblaApi?.scrollPrev()}
+                      >
+                        <ChevronLeftIcon />
+                      </button>
+                      <button
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white"
+                        onClick={() => emblaApi?.scrollNext()}
+                      >
+                        <ChevronRightIcon />
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -426,7 +456,7 @@ export default function Home() {
                   placeholder="Escribe un comentario..."
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
-                  className="w-full p-3 border-2 border-blue-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none"
+                  className="w-full p-3 border-2 border-blue-100 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none text-black"
                   rows={3}
                 />
                 <button
