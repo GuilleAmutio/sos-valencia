@@ -11,6 +11,7 @@ interface Post {
   title: string;
   description: string;
   imageUrls?: string[]; // Changed from imageUrl to imageUrls array
+  createdAt: string | Date;
   comments: {
     text: string;
     createdAt: Date;
@@ -61,6 +62,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const itemsPerPageOptions = [10, 25, 50, 100];
+  const [sortOrder, setSortOrder] = useState('newest');
 
   useEffect(() => {
     // Fetch posts from the API when the component mounts
@@ -146,18 +148,31 @@ export default function Home() {
     }
   };
 
-  const filteredPosts = posts.filter(post => {
-    const query = searchQuery.toLowerCase();
-    return (
-      post.title.toLowerCase().includes(query) ||
-      post.description.toLowerCase().includes(query)
-    );
-  });
+  const getFilteredAndSortedPosts = () => {
+    // First apply search filter
+    const searchFiltered = posts.filter(post => {
+      const query = searchQuery.toLowerCase();
+      return (
+        post.title.toLowerCase().includes(query) ||
+        post.description.toLowerCase().includes(query)
+      );
+    });
 
+    // Then sort by date
+    return searchFiltered.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder === 'newest' 
+        ? dateB.getTime() - dateA.getTime() 
+        : dateA.getTime() - dateB.getTime();
+    });
+  };
+
+  const filteredAndSortedPosts = getFilteredAndSortedPosts();
   const indexOfLastPost = currentPage * itemsPerPage;
   const indexOfFirstPost = indexOfLastPost - itemsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(filteredPosts.length / itemsPerPage);
+  const currentPosts = filteredAndSortedPosts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(filteredAndSortedPosts.length / itemsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -171,9 +186,10 @@ export default function Home() {
         
         {/* Sticky container for search and pagination */}
         <div className="sticky top-0 bg-white z-20 pb-4 shadow-sm">
-          {/* Search Bar */}
-          <div className="mb-4">
-            <div className="relative">
+          {/* Search and Sort Controls */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-4">
+            {/* Search Bar */}
+            <div className="relative flex-1">
               <input
                 type="text"
                 value={searchQuery}
@@ -193,6 +209,16 @@ export default function Home() {
                 <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
+
+            {/* Sort Dropdown */}
+            <select
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="px-4 py-3 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-700 bg-white cursor-pointer"
+            >
+              <option value="newest">Más recientes primero</option>
+              <option value="oldest">Más antiguos primero</option>
+            </select>
           </div>
 
           {/* Pagination Controls */}
@@ -277,7 +303,7 @@ export default function Home() {
 
             {/* Posts count */}
             <div className="text-gray-600">
-              Mostrando {indexOfFirstPost + 1}-{Math.min(indexOfLastPost, filteredPosts.length)} de {filteredPosts.length}
+              Mostrando {indexOfFirstPost + 1}-{Math.min(indexOfLastPost, getFilteredAndSortedPosts().length)} de {getFilteredAndSortedPosts().length}
             </div>
           </div>
         </div>
