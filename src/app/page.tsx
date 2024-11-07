@@ -13,6 +13,7 @@ import ImageModal from '@/components/ImageModal';
 import CommentForm from '@/components/CommentForm';
 import CommentList from '@/components/CommentList';
 import PostCard from '@/components/PostCard';
+import PaginationControls from '@/components/PaginationControls';
 
 interface Post {
   _id: string;
@@ -207,8 +208,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white w-full pb-[200px]">
-      <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
+    <main className="min-h-screen bg-white w-full pb-[100px]">
+      <div className="max-w-4xl mx-auto px-4 pb-20 bg-white pt-0 mt-0">
         <Header />
         
         {/* Sticky container for search and pagination */}
@@ -338,7 +339,7 @@ export default function Home() {
         <EmergencyInformation></EmergencyInformation>
 
         {/* Existing Posts */}
-        <div className="space-y-6 mb-20">
+        <div className="space-y-6 mb-8">
           {currentPosts.map((post) => (
             <PostCard
               key={post._id}
@@ -375,6 +376,20 @@ export default function Home() {
             />
           ))}
         </div>
+
+        {/* Pagination Controls */}
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredAndSortedPosts.length}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={(items) => {
+            setItemsPerPage(items);
+            setCurrentPage(1);
+          }}
+          itemsPerPageOptions={itemsPerPageOptions}
+        />
       </div>
 
       {/* Main container for create post form */}
