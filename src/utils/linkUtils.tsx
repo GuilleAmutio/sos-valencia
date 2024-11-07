@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 export const processTextWithLinks = (text: string | undefined | null): ReactNode => {
   if (!text) return '';
   
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urlRegex = /(?<!<)(https?:\/\/[^\s<>]+)(?!>)/g;
   
   if (!text.match(urlRegex)) {
     return <span>{text}</span>;
