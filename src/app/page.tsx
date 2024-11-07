@@ -14,6 +14,7 @@ import CommentForm from '@/components/CommentForm';
 import CommentList from '@/components/CommentList';
 import PostCard from '@/components/PostCard';
 import SearchAndFilters from '@/components/SearchAndFilters';
+import PaginationControls from '@/components/PaginationControls';
 
 interface Post {
   _id: string;
@@ -112,7 +113,7 @@ export default function Home() {
     setTitleError(false);
     setDescriptionError(false);
 
-    // Validación
+    // Validation
     if (!newPost.title.trim()) {
       setTitleError(true);
       return;
@@ -134,14 +135,36 @@ export default function Home() {
       
       setPosts(currentPosts => [...currentPosts, savedPost]);
       
+      // Reset form
       setNewPost({ title: '', description: '', imageUrls: [] });
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
 
+      // Refresh posts
       const refreshRes = await fetch('/api/posts');
       const refreshedPosts = await refreshRes.json();
       setPosts(refreshedPosts);
+      
+      // Collapse the form
+      setIsCreatePostOpen(false);
+
+      // Set page to 1 if sorting by newest (post will appear at the top)
+      // Or last page if sorting by oldest (post will appear at the bottom)
+      if (sortOrder === 'newest') {
+        setCurrentPage(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const newTotalPages = Math.ceil((refreshedPosts.length) / itemsPerPage);
+        setCurrentPage(newTotalPages);
+        // Give a small delay to allow the page to update before scrolling
+        setTimeout(() => {
+          window.scrollTo({ 
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth' 
+          });
+        }, 100);
+      }
       
     } catch (error) {
       console.error('Error creating post:', error);
@@ -224,7 +247,7 @@ export default function Home() {
       />
 
       {/* Posts list */}
-      <div className="space-y-6 mb-8">
+      <div className="space-y-6 mb-2">
         {currentPosts.map((post) => (
           <PostCard
             key={post._id}
@@ -261,7 +284,16 @@ export default function Home() {
           />
         ))}
       </div>
-      
+
+      {/* Pagination Controls */}
+      <div className="mb-6">
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
+
       {/* Main container for create post form */}
       <div className="fixed bottom-0 left-0 right-0">
         {/* Form container with button - entire unit slides */}
