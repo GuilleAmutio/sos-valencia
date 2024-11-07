@@ -9,6 +9,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import ImageCarousel from '@/components/ImageCarousel';
 import ImageModal from '@/components/ImageModal';
+import CommentForm from '@/components/CommentForm';
 
 interface Post {
   _id: string;
@@ -22,12 +23,18 @@ interface Post {
 }
 
 // Post content component with all the details
-const PostContent = ({ post }: { post: Post }) => {
+interface PostContentProps {
+  post: Post;
+  setPost: React.Dispatch<React.SetStateAction<Post | null>>;
+}
+
+const PostContent = ({ post, setPost }: PostContentProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true,
     align: 'center',
   });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [comment, setComment] = useState('');
 
   return (
     <div className="bg-gray-100 border border-gray-200 p-6 rounded-xl shadow-md">
@@ -63,14 +70,10 @@ const PostContent = ({ post }: { post: Post }) => {
         </h2>
 
         {/* Comment Form */}
-        <form 
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            const comment = (form.elements.namedItem('comment') as HTMLTextAreaElement).value;
-            
-            if (!comment.trim()) return;
-
+        <CommentForm
+          value={comment}
+          onChange={(value) => setComment(value)}
+          onSubmit={async (comment) => {
             try {
               const res = await fetch(`/api/posts/${post._id}/comments`, {
                 method: 'POST',
@@ -79,29 +82,18 @@ const PostContent = ({ post }: { post: Post }) => {
               });
 
               if (res.ok) {
-                form.reset();
-                window.location.reload();
+                setComment('');
+                // Refresh post data
+                const refreshRes = await fetch(`/api/posts/${post._id}`);
+                const refreshedPost = await refreshRes.json();
+                setPost(refreshedPost);
               }
             } catch (error) {
               console.error('Error posting comment:', error);
             }
           }}
           className="mb-8"
-        >
-          <textarea
-            name="comment"
-            placeholder="Escribe un comentario..."
-            className="w-full p-4 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black break-words whitespace-pre-wrap overflow-hidden"
-            rows={3}
-            required
-          />
-          <button
-            type="submit"
-            className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Comentar
-          </button>
-        </form>
+        />
 
         {/* Comments Display */}
         <div className="space-y-4">
@@ -171,7 +163,7 @@ export default function PostPage() {
         </Link>
 
         <Suspense fallback={<LoadingPost />}>
-          {post ? <PostContent post={post} /> : <LoadingPost />}
+          {post ? <PostContent post={post} setPost={setPost} /> : <LoadingPost />}
         </Suspense>
       </div>
     </main>

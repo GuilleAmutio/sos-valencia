@@ -10,6 +10,7 @@ import { processTextWithLinks } from '@/utils/linkUtils';
 import Header from '@/components/Header';
 import ImageCarousel from '@/components/ImageCarousel';
 import ImageModal from '@/components/ImageModal';
+import CommentForm from '@/components/CommentForm';
 
 interface Post {
   _id: string;
@@ -373,49 +374,38 @@ export default function Home() {
                 </h3>
                 
                 {/* Comment form */}
-                <div className="mt-4">
-                  <textarea
-                    placeholder="Escribe un comentario..."
-                    value={commentTexts[post._id] || ''}
-                    onChange={(e) => setCommentTexts(prev => ({
-                      ...prev,
-                      [post._id]: e.target.value
-                    }))}
-                    className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm resize-none text-black"
-                    rows={3}
-                  />
-                  <button
-                    onClick={async () => {
-                      if (!commentTexts[post._id]?.trim()) return;
+                <CommentForm
+                  value={commentTexts[post._id] || ''}
+                  onChange={(value) => setCommentTexts(prev => ({
+                    ...prev,
+                    [post._id]: value
+                  }))}
+                  onSubmit={async (comment) => {
+                    try {
+                      const res = await fetch(`/api/posts/${post._id}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: comment }),
+                      });
+
+                      if (!res.ok) throw new Error('Failed to post comment');
+
+                      // Reset solo el comentario de este post específico
+                      setCommentTexts(prev => ({
+                        ...prev,
+                        [post._id]: ''
+                      }));
                       
-                      try {
-                        const res = await fetch(`/api/posts/${post._id}/comments`, {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ text: commentTexts[post._id] }),
-                        });
-
-                        if (!res.ok) throw new Error('Failed to post comment');
-
-                        // Reset solo el comentario de este post específico
-                        setCommentTexts(prev => ({
-                          ...prev,
-                          [post._id]: ''
-                        }));
-                        
-                        // Refresh posts to show new comment
-                        const refreshRes = await fetch('/api/posts');
-                        const refreshedPosts = await refreshRes.json();
-                        setPosts(refreshedPosts);
-                      } catch (error) {
-                        console.error('Error posting comment:', error);
-                      }
-                    }}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md"
-                  >
-                    Comentar
-                  </button>
-                </div>
+                      // Refresh posts to show new comment
+                      const refreshRes = await fetch('/api/posts');
+                      const refreshedPosts = await refreshRes.json();
+                      setPosts(refreshedPosts);
+                    } catch (error) {
+                      console.error('Error posting comment:', error);
+                    }
+                  }}
+                  className="mt-4"
+                />
 
                 {/* Display last 2 comments */}
                 <div className="mt-4 space-y-3">
