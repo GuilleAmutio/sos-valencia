@@ -6,6 +6,8 @@ import { useParams } from 'next/navigation';
 import useEmblaCarousel from 'embla-carousel-react';
 import { processTextWithLinks } from '@/utils/linkUtils';
 import Image from 'next/image';
+import Header from '@/components/Header';
+import ImageCarousel from '@/components/ImageCarousel';
 
 interface Post {
   _id: string;
@@ -35,58 +37,11 @@ const PostContent = ({ post }: { post: Post }) => {
 
       {/* Images Carousel */}
       {post.imageUrls && post.imageUrls.length > 0 && (
-        <div className="relative w-full mb-6">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {post.imageUrls.map((url, index) => (
-                <div key={index} className="relative flex-[0_0_100%]">
-                  <img 
-                    src={url} 
-                    alt={`${post.title} - ${index + 1}`}
-                    className="w-full h-[250px] object-contain bg-gray-100 rounded-lg cursor-pointer"
-                    onClick={() => setSelectedImage(url)}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Navigation Buttons */}
-          {post.imageUrls.length > 1 && (
-            <>
-              <button
-                onClick={() => emblaApi?.scrollPrev()}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white transition-all"
-                aria-label="Previous image"
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="w-6 h-6 text-gray-600" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                onClick={() => emblaApi?.scrollNext()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white transition-all"
-                aria-label="Next image"
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  className="w-6 h-6 text-gray-600" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
+        <ImageCarousel 
+          images={post.imageUrls} 
+          onImageClick={(url) => setSelectedImage(url)}
+          className="mb-6"
+        />
       )}
 
       {/* Image Modal */}
@@ -229,32 +184,7 @@ export default function PostPage() {
   return (
     <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
-        <div className="text-center py-6">
-          <div className="flex justify-center items-center">
-            <div className="flex items-center gap-2">
-              <img 
-                src="/aid-svgrepo-com.svg" 
-                alt="SOS Valencia Icon" 
-                className="w-8 md:w-10 h-8 md:h-10"
-              />
-              <h1 className="text-4xl md:text-5xl font-black tracking-wider">
-                <span className="text-red-600">SOS</span>
-                <span className="text-black ml-2">Valencia</span>
-              </h1>
-            </div>
-          </div>
-          <p className="mt-2 text-gray-600">
-            Cualquier incidencia reportar en{' '}
-            <a 
-              href="https://github.com/GuilleAmutio/sos-valencia/issues" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-blue-600 hover:text-blue-800 underline"
-            >
-              @github/issues
-            </a>
-          </p>
-        </div>
+        <Header />
 
         {/* Back button and post content */}
         <Link 

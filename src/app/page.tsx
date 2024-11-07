@@ -7,6 +7,8 @@ import Link from 'next/link';
 import EmergencyInformation from "@/components/EmergencyInformation";
 import {ChevronLeftIcon, ChevronRightIcon} from "@/components/Icons";
 import { processTextWithLinks } from '@/utils/linkUtils';
+import Header from '@/components/Header';
+import ImageCarousel from '@/components/ImageCarousel';
 
 interface Post {
   _id: string;
@@ -203,32 +205,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white w-full pb-[200px]">
       <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
-        <div className="text-center py-6">
-          <div className="flex justify-center items-center">
-            <div className="flex items-center gap-2">
-              <img 
-                src="/aid-svgrepo-com.svg" 
-                alt="SOS Valencia Icon" 
-                className="w-8 md:w-10 h-8 md:h-10"
-              />
-              <h1 className="text-4xl md:text-5xl font-black tracking-wider">
-                <span className="text-red-600">SOS</span>
-                <span className="text-black ml-2">Valencia</span>
-              </h1>
-            </div>
-          </div>
-          <p className="mt-2 text-gray-600">
-            Cualquier incidencia reportar en{' '}
-            <a 
-              href="https://github.com/GuilleAmutio/sos-valencia/issues" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-blue-600 hover:text-blue-800 underline"
-            >
-              @github/issues
-            </a>
-          </p>
-        </div>
+        <Header />
         
         {/* Sticky container for search and pagination */}
         <div className="pb-4">
@@ -376,41 +353,12 @@ export default function Home() {
               </Link>
 
               {/* Image carousel with enhanced shadows */}
-              {post.imageUrls && post.imageUrls.length > 0 && (
-                <div className="relative w-full mb-4 rounded-lg overflow-hidden shadow-md">
-                  <div className="embla" ref={emblaRef}>
-                    <div className="embla__container flex">
-                      {post.imageUrls.map((url, index) => (
-                        <div key={index} className="embla__slide flex-[0_0_100%] min-w-0">
-                          <img 
-                            src={url} 
-                            alt={`Image ${index + 1}`}
-                            className="w-full h-[250px] object-contain bg-gray-100 cursor-pointer"
-                            onClick={() => setSelectedImage(url)}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Navigation Buttons */}
-                  {post.imageUrls.length > 1 && (
-                    <>
-                      <button
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white"
-                        onClick={() => emblaApi?.scrollPrev()}
-                      >
-                        <ChevronLeftIcon />
-                      </button>
-                      <button
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md hover:bg-white"
-                        onClick={() => emblaApi?.scrollNext()}
-                      >
-                        <ChevronRightIcon />
-                      </button>
-                    </>
-                  )}
-                </div>
+              {post.imageUrls && (
+                <ImageCarousel 
+                  images={post.imageUrls} 
+                  onImageClick={(url) => setSelectedImage(url)}
+                  className="mb-4"
+                />
               )}
 
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words overflow-hidden">
