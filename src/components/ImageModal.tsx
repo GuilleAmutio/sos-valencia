@@ -23,7 +23,6 @@ export default function ImageModal({ imageUrl, onClose }: ImageModalProps) {
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/70 transition-colors"
-          aria-label="Close modal"
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
