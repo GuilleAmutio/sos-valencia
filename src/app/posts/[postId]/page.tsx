@@ -10,6 +10,8 @@ import Header from '@/components/Header';
 import ImageCarousel from '@/components/ImageCarousel';
 import ImageModal from '@/components/ImageModal';
 import CommentForm from '@/components/CommentForm';
+import CommentList from '@/components/CommentList';
+import PostDetail from '@/components/PostDetail';
 
 interface Post {
   _id: string;
@@ -95,19 +97,9 @@ const PostContent = ({ post, setPost }: PostContentProps) => {
           className="mb-8"
         />
 
-        {/* Comments Display */}
-        <div className="space-y-4">
-          {post.comments.map((comment, index) => (
-            <div key={index} className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700 break-words whitespace-pre-wrap overflow-hidden">
-                {processTextWithLinks(comment.text)}
-              </p>
-              <span className="text-sm text-gray-500 mt-2 block">
-                {new Date(comment.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-          ))}
-        </div>
+        <CommentList 
+          comments={post.comments}
+        />
       </div>
     </div>
   );
@@ -163,7 +155,7 @@ export default function PostPage() {
         </Link>
 
         <Suspense fallback={<LoadingPost />}>
-          {post ? <PostContent post={post} setPost={setPost} /> : <LoadingPost />}
+          {post ? <PostDetail post={post} setPost={setPost} /> : <LoadingPost />}
         </Suspense>
       </div>
     </main>

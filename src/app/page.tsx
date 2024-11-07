@@ -11,6 +11,8 @@ import Header from '@/components/Header';
 import ImageCarousel from '@/components/ImageCarousel';
 import ImageModal from '@/components/ImageModal';
 import CommentForm from '@/components/CommentForm';
+import CommentList from '@/components/CommentList';
+import PostCard from '@/components/PostCard';
 
 interface Post {
   _id: string;
@@ -338,100 +340,39 @@ export default function Home() {
         {/* Existing Posts */}
         <div className="space-y-6 mb-20">
           {currentPosts.map((post) => (
-            <div 
-              key={post._id} 
-              className="bg-gradient-to-b from-gray-50 to-white border border-gray-200 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 w-full backdrop-filter backdrop-blur-sm"
-              style={{
-                background: 'linear-gradient(145deg, #f8f9fa, #ffffff)',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-              }}
-            >
-              <Link 
-                href={`/posts/${post._id}`} 
-                prefetch={true}
-                className="text-2xl font-medium text-gray-800 hover:text-blue-700 transition-colors cursor-pointer block mb-3"
-              >
-                <h2 className="break-words whitespace-pre-wrap overflow-hidden">{post.title}</h2>
-              </Link>
+            <PostCard
+              key={post._id}
+              post={post}
+              commentText={commentTexts[post._id] || ''}
+              onCommentChange={(value) => setCommentTexts(prev => ({
+                ...prev,
+                [post._id]: value
+              }))}
+              onCommentSubmit={async (comment) => {
+                try {
+                  const res = await fetch(`/api/posts/${post._id}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: comment }),
+                  });
 
-              {/* Image carousel with enhanced shadows */}
-              {post.imageUrls && (
-                <ImageCarousel 
-                  images={post.imageUrls} 
-                  onImageClick={(url) => setSelectedImage(url)}
-                  className="mb-4"
-                />
-              )}
+                  if (!res.ok) throw new Error('Failed to post comment');
 
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words overflow-hidden">
-                {processTextWithLinks(post.description)}
-              </p>
-
-              {/* Comments section */}
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900 mb-3">
-                  Comentarios ({post.comments.length})
-                </h3>
-                
-                {/* Comment form */}
-                <CommentForm
-                  value={commentTexts[post._id] || ''}
-                  onChange={(value) => setCommentTexts(prev => ({
+                  // Reset solo el comentario de este post específico
+                  setCommentTexts(prev => ({
                     ...prev,
-                    [post._id]: value
-                  }))}
-                  onSubmit={async (comment) => {
-                    try {
-                      const res = await fetch(`/api/posts/${post._id}/comments`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: comment }),
-                      });
-
-                      if (!res.ok) throw new Error('Failed to post comment');
-
-                      // Reset solo el comentario de este post específico
-                      setCommentTexts(prev => ({
-                        ...prev,
-                        [post._id]: ''
-                      }));
-                      
-                      // Refresh posts to show new comment
-                      const refreshRes = await fetch('/api/posts');
-                      const refreshedPosts = await refreshRes.json();
-                      setPosts(refreshedPosts);
-                    } catch (error) {
-                      console.error('Error posting comment:', error);
-                    }
-                  }}
-                  className="mt-4"
-                />
-
-                {/* Display last 2 comments */}
-                <div className="mt-4 space-y-3">
-                  {post.comments.slice(-2).map((comment, index) => (
-                    <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-gray-700 break-words whitespace-pre-wrap overflow-hidden">
-                        {processTextWithLinks(comment.text)}
-                      </p>
-                      <span className="text-sm text-gray-500 mt-1 block">
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  ))}
+                    [post._id]: ''
+                  }));
                   
-                  {/* "Ver más" link if there are more than 2 comments */}
-                  {post.comments.length > 2 && (
-                    <Link 
-                      href={`/posts/${post._id}`}
-                      className="block mt-3 text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Ver todos los comentarios ({post.comments.length})
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
+                  // Refresh posts to show new comment
+                  const refreshRes = await fetch('/api/posts');
+                  const refreshedPosts = await refreshRes.json();
+                  setPosts(refreshedPosts);
+                } catch (error) {
+                  console.error('Error posting comment:', error);
+                }
+              }}
+            />
           ))}
         </div>
       </div>
