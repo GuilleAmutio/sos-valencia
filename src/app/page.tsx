@@ -231,7 +231,7 @@ export default function Home() {
         </div>
         
         {/* Sticky container for search and pagination */}
-        <div className="sticky top-0 z-20 pb-4 backdrop-blur-sm">
+        <div className="pb-4">
           <div className="max-w-4xl mx-auto px-4 pt-4">
             {/* Search Bar with enhanced shadow */}
             <div className="flex gap-4 mb-4">
