@@ -27,7 +27,9 @@ const PostContent = ({ post }: { post: Post }) => {
   return (
     <div className="bg-gray-100 border border-gray-200 p-6 rounded-xl shadow-md">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-4">{post.title}</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-4 break-all whitespace-pre-wrap overflow-hidden">
+        {post.title}
+      </h1>
 
       {/* Images Carousel */}
       {post.imageUrls && post.imageUrls.length > 0 && (
@@ -117,7 +119,9 @@ const PostContent = ({ post }: { post: Post }) => {
       )}
 
       {/* Description */}
-      <p className="text-gray-700 whitespace-pre-wrap mb-6">{post.description}</p>
+      <p className="text-gray-700 whitespace-pre-wrap mb-6 break-all overflow-hidden">
+        {post.description}
+      </p>
 
       {/* Comments Section */}
       <div className="mt-8 border-t border-gray-200 pt-6">
@@ -154,7 +158,7 @@ const PostContent = ({ post }: { post: Post }) => {
           <textarea
             name="comment"
             placeholder="Escribe un comentario..."
-            className="w-full p-4 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black"
+            className="w-full p-4 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black break-all whitespace-pre-wrap overflow-hidden"
             rows={3}
             required
           />
@@ -170,7 +174,9 @@ const PostContent = ({ post }: { post: Post }) => {
         <div className="space-y-4">
           {post.comments.map((comment, index) => (
             <div key={index} className="bg-gray-50 p-4 rounded-lg">
-              <p className="text-gray-700">{comment.text}</p>
+              <p className="text-gray-700 break-all whitespace-pre-wrap overflow-hidden">
+                {comment.text}
+              </p>
               <span className="text-sm text-gray-500 mt-2 block">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </span>
