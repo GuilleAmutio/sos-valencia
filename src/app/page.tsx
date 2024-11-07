@@ -372,7 +372,7 @@ export default function Home() {
                 prefetch={true}
                 className="text-2xl font-medium text-gray-800 hover:text-blue-700 transition-colors cursor-pointer block mb-3"
               >
-                <h2 className="break-all whitespace-pre-wrap overflow-hidden">{post.title}</h2>
+                <h2 className="break-words whitespace-pre-wrap overflow-hidden">{post.title}</h2>
               </Link>
 
               {/* Image carousel with enhanced shadows */}
@@ -413,7 +413,7 @@ export default function Home() {
                 </div>
               )}
 
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-all overflow-hidden">
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-words overflow-hidden">
                 {processTextWithLinks(post.description)}
               </p>
 
@@ -472,7 +472,7 @@ export default function Home() {
                 <div className="mt-4 space-y-3">
                   {post.comments.slice(-2).map((comment, index) => (
                     <div key={index} className="bg-gray-50 p-3 rounded-lg">
-                      <p className="text-gray-700 break-all whitespace-pre-wrap overflow-hidden">
+                      <p className="text-gray-700 break-words whitespace-pre-wrap overflow-hidden">
                         {processTextWithLinks(comment.text)}
                       </p>
                       <span className="text-sm text-gray-500 mt-1 block">
@@ -542,7 +542,7 @@ export default function Home() {
                 }}
                 className={`border-2 ${
                   titleError ? 'border-red-500' : 'border-blue-200'
-                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500 break-all whitespace-pre-wrap overflow-hidden`}
+                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500 break-words whitespace-pre-wrap overflow-hidden`}
               />
               {titleError && (
                 <span className="text-red-500 text-sm mt-1">
@@ -561,7 +561,7 @@ export default function Home() {
                 }}
                 className={`border-2 ${
                   descriptionError ? 'border-red-500' : 'border-blue-200'
-                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500 break-all whitespace-pre-wrap overflow-hidden`}
+                } p-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 bg-white w-full text-black placeholder-gray-500 break-words whitespace-pre-wrap overflow-hidden`}
                 rows={3}
               />
               {descriptionError && (
