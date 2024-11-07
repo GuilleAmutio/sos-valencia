@@ -1,8 +1,10 @@
+import Link from 'next/link';
+
 export default function Header() {
   return (
     <div className="text-center py-6">
       <div className="flex justify-center items-center">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <img 
             src="/aid-svgrepo-com.svg" 
             alt="SOS Valencia Icon" 
@@ -12,7 +14,7 @@ export default function Header() {
             <span className="text-red-600">SOS</span>
             <span className="text-black ml-2">Valencia</span>
           </h1>
-        </div>
+        </Link>
       </div>
       <p className="mt-2 text-gray-600">
         Cualquier incidencia reportar en{' '}
