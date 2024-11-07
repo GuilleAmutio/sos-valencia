@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import useEmblaCarousel from 'embla-carousel-react';
+import { processTextWithLinks } from '@/utils/linkUtils';
 
 interface Post {
   _id: string;
@@ -120,7 +121,7 @@ const PostContent = ({ post }: { post: Post }) => {
 
       {/* Description */}
       <p className="text-gray-700 whitespace-pre-wrap mb-6 break-all overflow-hidden">
-        {post.description}
+        {processTextWithLinks(post.description)}
       </p>
 
       {/* Comments Section */}
@@ -175,7 +176,7 @@ const PostContent = ({ post }: { post: Post }) => {
           {post.comments.map((comment, index) => (
             <div key={index} className="bg-gray-50 p-4 rounded-lg">
               <p className="text-gray-700 break-all whitespace-pre-wrap overflow-hidden">
-                {comment.text}
+                {processTextWithLinks(comment.text)}
               </p>
               <span className="text-sm text-gray-500 mt-2 block">
                 {new Date(comment.createdAt).toLocaleDateString()}

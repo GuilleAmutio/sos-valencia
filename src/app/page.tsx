@@ -6,6 +6,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Link from 'next/link';
 import EmergencyInformation from "@/components/EmergencyInformation";
 import {ChevronLeftIcon, ChevronRightIcon} from "@/components/Icons";
+import { processTextWithLinks } from '@/utils/linkUtils';
 
 interface Post {
   _id: string;
@@ -413,7 +414,7 @@ export default function Home() {
               )}
 
               <p className="text-gray-700 leading-relaxed whitespace-pre-wrap break-all overflow-hidden">
-                {post.description}
+                {processTextWithLinks(post.description)}
               </p>
 
               {/* Comments section */}
@@ -472,7 +473,7 @@ export default function Home() {
                   {post.comments.slice(-2).map((comment, index) => (
                     <div key={index} className="bg-gray-50 p-3 rounded-lg">
                       <p className="text-gray-700 break-all whitespace-pre-wrap overflow-hidden">
-                        {comment.text}
+                        {processTextWithLinks(comment.text)}
                       </p>
                       <span className="text-sm text-gray-500 mt-1 block">
                         {new Date(comment.createdAt).toLocaleDateString()}
