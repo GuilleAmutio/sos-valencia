@@ -286,7 +286,7 @@ export default function Home() {
       </div>
 
       {/* Pagination Controls */}
-      <div className="mb-6">
+      <div className="mb-6 relative z-10">
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
@@ -295,17 +295,17 @@ export default function Home() {
       </div>
 
       {/* Main container for create post form */}
-      <div className="fixed bottom-0 left-0 right-0">
+      <div className={`fixed bottom-0 left-0 right-0 z-20 pointer-events-none`}>
         {/* Form container with button - entire unit slides */}
         <div 
-          className={`bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 ${
+          className={`bg-gray-100 border-t-2 border-blue-200 shadow-lg w-full transition-transform duration-300 pointer-events-auto ${
             isCreatePostOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
           {/* Button - always at top of form */}
           <button
             onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
-            className="absolute left-1/2 transform -translate-x-1/2 -top-10 bg-blue-600 text-white px-6 py-2 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md"
+            className="absolute left-1/2 transform -translate-x-1/2 -top-10 bg-blue-600 text-white px-6 py-2 rounded-t-lg hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-md pointer-events-auto"
           >
             <span className="font-medium whitespace-nowrap">
               {isCreatePostOpen ? 'Cerrar formulario' : 'Crear Nueva Publicación'}
