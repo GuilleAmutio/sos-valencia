@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation';
 import useEmblaCarousel from 'embla-carousel-react';
 import { processTextWithLinks } from '@/utils/linkUtils';
 import Image from 'next/image';
-import Header from '@/components/Header';
 import ImageCarousel from '@/components/ImageCarousel';
 import ImageModal from '@/components/ImageModal';
 import CommentForm from '@/components/CommentForm';
@@ -142,22 +141,17 @@ export default function PostPage() {
   }, [postId]);
 
   return (
-    <main className="min-h-screen bg-white w-full pb-[200px]">
-      <div className="max-w-4xl mx-auto px-4 pb-96 bg-white pt-0 mt-0">
-        <Header />
+    <>
+      <Link 
+        href="/"
+        className="text-blue-600 hover:text-blue-800 mb-6 inline-block"
+      >
+        ← Volver
+      </Link>
 
-        {/* Back button and post content */}
-        <Link 
-          href="/"
-          className="text-blue-600 hover:text-blue-800 mb-6 inline-block"
-        >
-          ← Volver
-        </Link>
-
-        <Suspense fallback={<LoadingPost />}>
-          {post ? <PostDetail post={post} setPost={setPost} /> : <LoadingPost />}
-        </Suspense>
-      </div>
-    </main>
+      <Suspense fallback={<LoadingPost />}>
+        {post ? <PostDetail post={post} setPost={setPost} /> : <LoadingPost />}
+      </Suspense>
+    </>
   );
 }

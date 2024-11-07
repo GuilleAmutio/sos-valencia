@@ -13,7 +13,7 @@ import ImageModal from '@/components/ImageModal';
 import CommentForm from '@/components/CommentForm';
 import CommentList from '@/components/CommentList';
 import PostCard from '@/components/PostCard';
-import PaginationControls from '@/components/PaginationControls';
+import SearchAndFilters from '@/components/SearchAndFilters';
 
 interface Post {
   _id: string;
@@ -43,7 +43,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const itemsPerPageOptions = [10, 25, 50, 100];
-  const [sortOrder, setSortOrder] = useState('newest');
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [commentTexts, setCommentTexts] = useState<{ [key: string]: string }>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [titleError, setTitleError] = useState(false);
@@ -208,190 +208,60 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white w-full pb-[100px]">
-      <div className="max-w-4xl mx-auto px-4 pb-20 bg-white pt-0 mt-0">
-        <Header />
-        
-        {/* Sticky container for search and pagination */}
-        <div className="pb-4">
-          <div className="max-w-4xl mx-auto px-4 pt-4">
-            {/* Search Bar with enhanced shadow */}
-            <div className="flex gap-4 mb-4">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar publicaciones..."
-                  className="w-full px-4 py-3 pl-10 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black shadow-sm hover:shadow-md transition-shadow"
-                />
-                <svg
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
+    <>
+      <SearchAndFilters
+        searchTerm={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortOrder={sortOrder}
+        onSortChange={(value) => setSortOrder(value)}
+        itemsPerPage={itemsPerPage}
+        onItemsPerPageChange={(value) => {
+          setItemsPerPage(value);
+          setCurrentPage(1);
+        }}
+        totalItems={filteredAndSortedPosts.length}
+        setCurrentPage={setCurrentPage}
+      />
 
-              <select
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-                className="px-4 py-2 border-2 border-blue-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-black shadow-sm hover:shadow-md transition-shadow"
-              >
-                <option value="newest">Más recientes primero</option>
-                <option value="oldest">Más antiguos primero</option>
-              </select>
-            </div>
+      {/* Posts list */}
+      <div className="space-y-6 mb-8">
+        {currentPosts.map((post) => (
+          <PostCard
+            key={post._id}
+            post={post}
+            commentText={commentTexts[post._id] || ''}
+            onCommentChange={(value) => setCommentTexts(prev => ({
+              ...prev,
+              [post._id]: value
+            }))}
+            onCommentSubmit={async (comment) => {
+              try {
+                const res = await fetch(`/api/posts/${post._id}/comments`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ text: comment }),
+                });
 
-            {/* Pagination Controls with enhanced design */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-md border border-blue-100">
-              {/* Items per page selector */}
-              <div className="flex items-center gap-2">
-                <span className="text-gray-600">Mostrar:</span>
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => {
-                    setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                  className="border rounded-md px-2 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {itemsPerPageOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <span className="text-gray-600">por página</span>
-              </div>
+                if (!res.ok) throw new Error('Failed to post comment');
 
-              {/* Page numbers */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1 rounded-md bg-blue-50 text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-100"
-                >
-                  ←
-                </button>
+                // Reset solo el comentario de este post específico
+                setCommentTexts(prev => ({
+                  ...prev,
+                  [post._id]: ''
+                }));
                 
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(page => {
-                    return page === 1 || 
-                           page === totalPages || 
-                           Math.abs(page - currentPage) <= 1;
-                  })
-                  .map((page, index, array) => {
-                    if (index > 0 && page - array[index - 1] > 1) {
-                      return (
-                        <Fragment key={`ellipsis-${page}`}>
-                          <span className="px-2 text-gray-500">...</span>
-                          <button
-                            onClick={() => handlePageChange(page)}
-                            className={`px-3 py-1 rounded-md ${
-                              currentPage === page
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        </Fragment>
-                      );
-                    }
-                    return (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`px-3 py-1 rounded-md ${
-                          currentPage === page
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    );
-                  })}
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1 rounded-md bg-blue-50 text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-100"
-                >
-                  →
-                </button>
-              </div>
-
-              {/* Posts count */}
-              <div className="text-gray-600">
-                Mostrando {indexOfFirstPost + 1}-{Math.min(indexOfLastPost, getFilteredAndSortedPosts().length)} de {getFilteredAndSortedPosts().length}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <EmergencyInformation></EmergencyInformation>
-
-        {/* Existing Posts */}
-        <div className="space-y-6 mb-8">
-          {currentPosts.map((post) => (
-            <PostCard
-              key={post._id}
-              post={post}
-              commentText={commentTexts[post._id] || ''}
-              onCommentChange={(value) => setCommentTexts(prev => ({
-                ...prev,
-                [post._id]: value
-              }))}
-              onCommentSubmit={async (comment) => {
-                try {
-                  const res = await fetch(`/api/posts/${post._id}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: comment }),
-                  });
-
-                  if (!res.ok) throw new Error('Failed to post comment');
-
-                  // Reset solo el comentario de este post específico
-                  setCommentTexts(prev => ({
-                    ...prev,
-                    [post._id]: ''
-                  }));
-                  
-                  // Refresh posts to show new comment
-                  const refreshRes = await fetch('/api/posts');
-                  const refreshedPosts = await refreshRes.json();
-                  setPosts(refreshedPosts);
-                } catch (error) {
-                  console.error('Error posting comment:', error);
-                }
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Pagination Controls */}
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          itemsPerPage={itemsPerPage}
-          totalItems={filteredAndSortedPosts.length}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={(items) => {
-            setItemsPerPage(items);
-            setCurrentPage(1);
-          }}
-          itemsPerPageOptions={itemsPerPageOptions}
-        />
+                // Refresh posts to show new comment
+                const refreshRes = await fetch('/api/posts');
+                const refreshedPosts = await refreshRes.json();
+                setPosts(refreshedPosts);
+              } catch (error) {
+                console.error('Error posting comment:', error);
+              }
+            }}
+          />
+        ))}
       </div>
-
+      
       {/* Main container for create post form */}
       <div className="fixed bottom-0 left-0 right-0">
         {/* Form container with button - entire unit slides */}
@@ -566,6 +436,7 @@ export default function Home() {
           })
         }}
       />
-    </main>
+      
+    </>
   );
 }

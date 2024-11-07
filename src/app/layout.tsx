@@ -4,6 +4,7 @@ import "./globals.css";
 import { Ubuntu } from 'next/font/google';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import Header from '@/components/Header';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -60,8 +61,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>
-        {children}
+      <body className={ubuntu.className}>
+        <main className="min-h-screen bg-white w-full pb-[100px]">
+          <div className="max-w-4xl mx-auto px-4 pb-20 bg-white pt-0 mt-0">
+            <Header />
+            {children}
+          </div>
+        </main>
         <SpeedInsights />
         <Analytics />
       </body>
