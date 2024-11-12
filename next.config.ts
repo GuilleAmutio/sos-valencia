@@ -1,14 +1,6 @@
-/** @type {import('next').NextConfig} */
-import type { NextConfig } from 'next'
-
+import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      rules: {
-        '*.md': ['raw']
-      }
-    }
-  }
-}
+  /* config options here */
+};
 
 export default nextConfig;

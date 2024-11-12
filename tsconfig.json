@@ -31,7 +31,6 @@
       "@/content/*": ["./src/content/*"],
       "@/utils/*": ["./src/utils/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node"],
     "allowImportingTsExtensions": true
   },
