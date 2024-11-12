@@ -150,7 +150,7 @@ export default function PostPage() {
       </Link>
 
       <Suspense fallback={<LoadingPost />}>
-      {post ? (
+        {post ? (
           <div className="mb-8">
             <PostDetail post={post} setPost={setPost} />
           </div>
