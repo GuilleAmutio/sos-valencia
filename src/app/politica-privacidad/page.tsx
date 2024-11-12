@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
-import { privacyContent } from '@/content/privacy-policy';
+import { privacyContent } from '@/content/privacy-policy.ts';
 
 export default function PrivacyPolicy() {
   const router = useRouter();

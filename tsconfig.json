@@ -32,7 +32,8 @@
       "@/utils/*": ["./src/utils/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node"]
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   },
   "include": [
     "next-env.d.ts", 
