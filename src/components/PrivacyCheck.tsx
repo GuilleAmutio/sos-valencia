@@ -12,16 +12,12 @@ export default function PrivacyCheck() {
   useEffect(() => {
     const accepted = localStorage.getItem('privacyAccepted');
     
-    // Skip check if already on privacy policy page or if already accepted
     if (pathname === '/politica-privacidad' || accepted === 'true') {
       return;
     }
     
-    if (accepted === null) {
-      setShowBanner(true);
-    } else if (accepted === 'false') {
-      window.location.href = 'https://google.es';
-    }
+    setShowBanner(true);
+    
   }, [pathname]);
 
   const handleAccept = () => {
@@ -30,8 +26,8 @@ export default function PrivacyCheck() {
   };
 
   const handleDecline = () => {
-    localStorage.setItem('privacyAccepted', 'false');
     window.location.href = 'https://google.es';
+    localStorage.removeItem('privacyAccepted');
   };
 
   if (!showBanner) return null;
@@ -49,9 +45,9 @@ export default function PrivacyCheck() {
         <div className="flex gap-4">
           <button
             onClick={handleDecline}
-            className="px-4 py-2 text-gray-900 hover:text-black"
+            className="px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300"
           >
-            Rechazar
+            Rechazar (Ir a Google)
           </button>
           <button
             onClick={handleAccept}
