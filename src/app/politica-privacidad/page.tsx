@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import ReactMarkdown from 'react-markdown';
+import { privacyContent } from '@/content/privacy-policy';
 
 export default function PrivacyPolicy() {
   const router = useRouter();
@@ -28,18 +30,18 @@ export default function PrivacyPolicy() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8 text-black">
-      <h1 className="text-3xl font-bold mb-6">Política de Privacidad</h1>
-
-      <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
-        {/* Add your privacy policy content here */}
-        <section>
-          <h2 className="text-xl font-semibold mb-3">1. Información que Recopilamos</h2>
-          <p className="text-gray-900">
-            [Your privacy policy content here]
-          </p>
-        </section>
-
-        {/* Add more sections as needed */}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <ReactMarkdown
+          components={{
+            h1: ({node, ...props}) => <h1 className="text-3xl font-bold mb-6" {...props} />,
+            h2: ({node, ...props}) => <h2 className="text-xl font-semibold mt-6 mb-3" {...props} />,
+            p: ({node, ...props}) => <p className="text-gray-900 mb-4" {...props} />,
+            ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-2" {...props} />,
+            li: ({node, ...props}) => <li className="text-gray-900" {...props} />
+          }}
+        >
+          {privacyContent}
+        </ReactMarkdown>
 
         {hasAccepted === null && (
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
