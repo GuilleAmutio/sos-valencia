@@ -26,10 +26,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@/components/*": ["src/components/*"],
-      "@/content/*": ["src/content/*"],
-      "@/utils/*": ["src/utils/*"]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/content/*": ["./src/content/*"],
+      "@/utils/*": ["./src/utils/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node"]
