@@ -13,6 +13,7 @@ Nota importante:
 
 ## 2. Finalidad y Base Legal del Tratamiento de Datos
 Finalidad: Facilitar la conexión entre personas que ofrecen y requieren ayuda en las áreas afectadas por la DANA.
+
 Base legal: El tratamiento de los datos se basa en el consentimiento expreso del usuario, otorgado al momento de crear una publicación en la plataforma.
 
 ## 3. Consentimiento y Publicación de Datos
