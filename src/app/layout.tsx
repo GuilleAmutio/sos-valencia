@@ -72,6 +72,7 @@ export default function RootLayout({
           </div>
         </main>
         <Footer />
+        <div id="modal-root"></div>
         <SpeedInsights />
         <Analytics />
       </body>
